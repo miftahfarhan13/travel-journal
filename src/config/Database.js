@@ -11,12 +11,12 @@ const {
     DATABASE_URL
 } = process.env
 
-const db = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
+const dbMySql = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
     host: DB_HOSTNAME,
     port: DB_PORT,
     dialect: DB_DIALECT
 })
 
-const dbPg = new Sequelize(DATABASE_URL)
+const db = new Sequelize(DATABASE_URL)
 
-export default dbPg
+export default db
