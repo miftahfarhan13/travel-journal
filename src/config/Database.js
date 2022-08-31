@@ -7,7 +7,8 @@ const {
     DB_HOSTNAME,
     DB_NAME,
     DB_DIALECT,
-    DB_PORT
+    DB_PORT,
+    DATABASE_URL
 } = process.env
 
 const db = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
@@ -16,4 +17,6 @@ const db = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
     dialect: DB_DIALECT
 })
 
-export default db
+const dbPg = new Sequelize(DATABASE_URL)
+
+export default dbPg

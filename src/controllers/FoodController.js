@@ -59,7 +59,7 @@ export const getFoods = async (req, res) => {
                             imageUrl: food.imageUrl,
                             ingredients: food.ingredients.split(','),
                             rating: rating,
-                            totalLikes: food.totalLikes,
+                            totalLikes: parseInt(food.totalLikes),
                             isLike: isLikes ? true : false,
                             createdAt: food.createdAt,
                             updatedAt: food.updatedAt
@@ -79,7 +79,7 @@ export const getFoods = async (req, res) => {
                             imageUrl: food.imageUrl,
                             ingredients: food.ingredients.split(','),
                             rating: rating,
-                            totalLikes: food.totalLikes,
+                            totalLikes: parseInt(food.totalLikes),
                             createdAt: food.createdAt,
                             updatedAt: food.updatedAt
                         })
@@ -98,7 +98,7 @@ export const getFoods = async (req, res) => {
                         imageUrl: food.imageUrl,
                         ingredients: food.ingredients.split(','),
                         rating: rating,
-                        totalLikes: food.totalLikes,
+                        totalLikes: parseInt(food.totalLikes),
                         createdAt: food.createdAt,
                         updatedAt: food.updatedAt
                     })
@@ -148,7 +148,7 @@ export const getUserFoods = async (req, res) => {
                                 imageUrl: food.imageUrl,
                                 ingredients: food.ingredients.split(','),
                                 rating: rating,
-                                totalLikes: food.totalLikes,
+                                totalLikes: parseInt(food.totalLikes),
                                 isLike: isLikes ? true : false,
                                 createdAt: food.createdAt,
                                 updatedAt: food.updatedAt
@@ -200,7 +200,7 @@ export const getFoodById = async (req, res) => {
             imageUrl: response.imageUrl,
             ingredients: response.ingredients.split(','),
             rating: rating,
-            totalLikes: responseLike.length,
+            totalLikes: parseInt(responseLike.length),
             createdAt: response.createdAt,
             updatedAt: response.updatedAt,
         }
@@ -225,7 +225,7 @@ export const getFoodById = async (req, res) => {
                     imageUrl: response.imageUrl,
                     ingredients: response.ingredients.split(','),
                     rating: rating,
-                    totalLikes: responseLike.length,
+                    totalLikes: parseInt(responseLike.length),
                     isLike: isLikes ? true : false,
                     createdAt: response.createdAt,
                     updatedAt: response.updatedAt,
