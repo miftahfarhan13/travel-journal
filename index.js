@@ -4,6 +4,7 @@ import FoodRoute from "./src/routes/FoodRoute.js"
 import UserRoute from "./src/routes/UserRoute.js"
 import LikeRoute from "./src/routes/LikeRoute.js"
 import ImageRoute from "./src/routes/ImageRoute.js"
+import RatingRoute from "./src/routes/RatingRoute.js"
 import multer from "multer";
 import bodyParser from "body-parser";
 
@@ -35,6 +36,7 @@ app.use(bodyParser.json())
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'))
 
 app.use(FoodRoute)
+app.use(RatingRoute)
 app.use(UserRoute)
 app.use(LikeRoute)
 app.use(ImageRoute)

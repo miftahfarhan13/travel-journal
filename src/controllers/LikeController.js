@@ -1,7 +1,6 @@
 import Jwt from 'jsonwebtoken'
 import User from "../models/UserModel.js";
 import Like from "../models/LikeModel.js";
-import Food from "../models/FoodModel.js";
 
 export const likeFood = async (req, res) => {
     try {

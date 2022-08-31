@@ -3,53 +3,62 @@ import Food from "../models/FoodModel.js";
 import Like from "../models/LikeModel.js";
 import Jwt from 'jsonwebtoken'
 import Validator from 'fastest-validator'
+import Rating from "../models/RatingModel.js";
 
 const v = new Validator()
+
+const getFoodRating = async (foodId) => {
+    const responseRating = await Rating.findAll({
+        where: {
+            foodId: foodId
+        },
+        raw: true
+    })
+
+    let foodRating = 0
+    for (const rate of responseRating) {
+        foodRating += rate.rating
+    }
+    return foodRating !== 0 ? parseFloat((foodRating / responseRating.length).toFixed(1)) : 0
+}
+
+const findFood = async () => {
+    return await Food.findAll({
+        attributes: [
+            'id',
+            'name',
+            'description',
+            'imageUrl',
+            'ingredients',
+            [sequelize.fn('COUNT', sequelize.col('likes.id')), 'totalLikes'],
+        ],
+        include: [{ model: Like, attributes: [], }],
+        group: 'foods.id',
+        raw: true
+    });
+}
 
 export const getFoods = async (req, res) => {
     try {
         let foodArray = []
-
-        const foods = await Food.findAll({
-            attributes: [
-                'id',
-                'name',
-                'description',
-                'imageUrl',
-                'ingredients',
-                [sequelize.fn('COUNT', sequelize.col('likes.id')), 'totalLikes'],
-            ],
-            include: [{ model: Like, attributes: [], }],
-            group: 'foods.id',
-            raw: true
-        });
 
         if (req.headers && req.headers.authorization) {
             const authorization = req.headers.authorization.split(' ')[1]
             const decoded = Jwt.verify(authorization, 'secret');
 
             if (decoded) {
-                await Food.findAll({
-                    attributes: [
-                        'id',
-                        'name',
-                        'description',
-                        'imageUrl',
-                        'ingredients',
-                        [sequelize.fn('COUNT', sequelize.col('likes.id')), 'totalLikes'],
-                    ],
-                    include: [{ model: Like, attributes: [], }],
-                    group: 'foods.id',
-                    raw: true
-                }).then(async (res) => {
+                await findFood().then(async (res) => {
                     for await (const food of res) {
                         const isLikes = await Like.findOne({ where: { foodId: food.id, userId: decoded.userId }, raw: true })
+                        const rating = await getFoodRating(food.id)
+
                         foodArray.push({
                             id: food.id,
                             name: food.name,
                             description: food.description,
                             imageUrl: food.imageUrl,
                             ingredients: food.ingredients.split(','),
+                            rating: rating,
                             totalLikes: food.totalLikes,
                             isLike: isLikes ? true : false,
                             createdAt: food.createdAt,
@@ -57,32 +66,43 @@ export const getFoods = async (req, res) => {
                         })
                     }
                 })
+
             } else {
-                foods.map((food) => {
+                await findFood().then(async (res) => {
+                    for await (const food of res) {
+                        const rating = await getFoodRating(food.id)
+
+                        foodArray.push({
+                            id: food.id,
+                            name: food.name,
+                            description: food.description,
+                            imageUrl: food.imageUrl,
+                            ingredients: food.ingredients.split(','),
+                            rating: rating,
+                            totalLikes: food.totalLikes,
+                            createdAt: food.createdAt,
+                            updatedAt: food.updatedAt
+                        })
+                    }
+                })
+            }
+        } else {
+            await findFood().then(async (res) => {
+                for await (const food of res) {
+                    const rating = await getFoodRating(food.id)
+
                     foodArray.push({
                         id: food.id,
                         name: food.name,
                         description: food.description,
                         imageUrl: food.imageUrl,
                         ingredients: food.ingredients.split(','),
+                        rating: rating,
                         totalLikes: food.totalLikes,
                         createdAt: food.createdAt,
                         updatedAt: food.updatedAt
                     })
-                })
-            }
-        } else {
-            foods.map((food) => {
-                foodArray.push({
-                    id: food.id,
-                    name: food.name,
-                    description: food.description,
-                    imageUrl: food.imageUrl,
-                    ingredients: JSON.parse(food.ingredients),
-                    totalLikes: food.totalLikes,
-                    createdAt: food.createdAt,
-                    updatedAt: food.updatedAt
-                })
+                }
             })
         }
 
@@ -118,6 +138,8 @@ export const getUserFoods = async (req, res) => {
                 }).then(async (res) => {
                     for await (const food of res) {
                         const isLikes = await Like.findOne({ where: { foodId: food.id, userId: decoded.userId }, raw: true })
+                        const rating = await getFoodRating(food.id)
+
                         if (isLikes) {
                             foodArray.push({
                                 id: food.id,
@@ -125,6 +147,7 @@ export const getUserFoods = async (req, res) => {
                                 description: food.description,
                                 imageUrl: food.imageUrl,
                                 ingredients: food.ingredients.split(','),
+                                rating: rating,
                                 totalLikes: food.totalLikes,
                                 isLike: isLikes ? true : false,
                                 createdAt: food.createdAt,
@@ -168,12 +191,15 @@ export const getFoodById = async (req, res) => {
             raw: true
         })
 
+        const rating = await getFoodRating(req.params.id)
+
         let data = {
             id: response.id,
             name: response.name,
             description: response.description,
             imageUrl: response.imageUrl,
             ingredients: response.ingredients.split(','),
+            rating: rating,
             totalLikes: responseLike.length,
             createdAt: response.createdAt,
             updatedAt: response.updatedAt,
@@ -198,6 +224,7 @@ export const getFoodById = async (req, res) => {
                     description: response.description,
                     imageUrl: response.imageUrl,
                     ingredients: response.ingredients.split(','),
+                    rating: rating,
                     totalLikes: responseLike.length,
                     isLike: isLikes ? true : false,
                     createdAt: response.createdAt,

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "migrate": "node models/index.js",
+    "migrate": "node src/models/index.js",
     "sequelize": "sequelize $*"
   },
   "repository": {
