@@ -8,7 +8,9 @@ const {
     DB_NAME,
     DB_DIALECT,
     DB_PORT,
-    DATABASE_URL
+    DATABASE_URL,
+    ENVIRONMENT,
+    CA_CERT
 } = process.env
 
 const dbMySql = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
@@ -17,6 +19,6 @@ const dbMySql = new Sequelize(DB_NAME, DB_USERNAME, DB_PASSWORD, {
     dialect: DB_DIALECT
 })
 
-const db = new Sequelize(DATABASE_URL)
+const db = new Sequelize(DATABASE_URL, { dialectOptions: { ssl: ENVIRONMENT === 'production' ? { ca: CA_CERT } : undefined } })
 
 export default db
