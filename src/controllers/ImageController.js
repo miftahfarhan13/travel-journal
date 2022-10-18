@@ -1,3 +1,9 @@
+import 'dotenv/config'
+
+const {
+    BASE_URL
+} = process.env
+
 export const uploadImage = async (req, res) => {
     try {
         if (!req.file) {
@@ -7,8 +13,18 @@ export const uploadImage = async (req, res) => {
         }
 
         const image = req.file.filename
-        res.status(201).json({ msg: "Upload image success", url: `${req.protocol}://${req.get('host')}/images/${image}` })
+        res.status(200).json({
+            code: "200",
+            status: "OK",
+            message: "Upload image success",
+            url: `${BASE_URL}/images/${image}`
+        })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }

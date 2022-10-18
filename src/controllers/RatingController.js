@@ -16,18 +16,26 @@ export const rateFood = async (req, res) => {
         const validate = v.validate(req.body, schema)
 
         if (!req.headers.authorization) {
-            return res.status(401).json({ msg: 'Unauthorized' });
+            return res.status(401).json({
+                code: "401",
+                status: "UNAUTHORIZED",
+                message: 'Unauthorized'
+            });
         }
 
         const authorization = req.headers.authorization.split(' ')[1]
         const decoded = Jwt.verify(authorization, 'secret');
         if (decoded) {
             if (validate.length) {
-                return res.status(400).json(validate)
+                return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
             }
             const findFood = await Food.findOne({ where: { id: req.params.foodId } })
             if (!findFood) {
-                return res.status(401).json({ msg: 'Food not found' });
+                return res.status(401).json({
+                    code: "404",
+                    status: "NOT_FOUND",
+                    message: 'Food not found'
+                });
             }
 
             const findUser = await User.findOne({
@@ -37,7 +45,11 @@ export const rateFood = async (req, res) => {
             })
 
             if (findUser == null) {
-                return res.status(500).json({ msg: "User not found" })
+                return res.status(404).json({
+                    code: "404",
+                    status: "NOT_FOUND",
+                    message: "User not found"
+                })
             }
 
             await Rating.create({
@@ -46,12 +58,25 @@ export const rateFood = async (req, res) => {
                 foodId: req.params.foodId,
                 userId: decoded.userId
             })
-            return res.status(201).json({ msg: "Rating Created" })
+            return res.status(200).json({
+                code: "200",
+                status: "OK",
+                message: "Rating Created"
+            })
         } else {
-            return res.status(401).json({ msg: 'Unauthorized' });
+            return res.status(401).json({
+                code: "401",
+                status: "UNAUTHORIZED",
+                message: 'Unauthorized'
+            });
         }
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -63,10 +88,17 @@ export const getRatingByFood = async (req, res) => {
             include: [{ attributes: ['id', 'name', 'email', 'profilePictureUrl', 'phoneNumber'], model: User }]
         })
         res.status(200).json({
-            msg: 'success',
+            code: "200",
+            status: "OK",
+            message: 'success',
             data: findRating
         })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }

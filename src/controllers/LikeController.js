@@ -22,11 +22,19 @@ export const likeFood = async (req, res) => {
                 })
 
                 if (findUser == null) {
-                    return res.status(500).json({ msg: "User not found" })
+                    return res.status(404).json({
+                        code: "404",
+                        status: "NOT_FOUND",
+                        message: "User not found"
+                    })
                 }
 
                 if (findFood !== null) {
-                    return res.status(401).json({ msg: 'Food already liked' });
+                    return res.status(401).json({
+                        code: "409",
+                        status: "CONFLICT",
+                        message: 'Food already liked'
+                    });
                 } else {
                     const like = {
                         foodId: req.body.foodId,
@@ -34,17 +42,35 @@ export const likeFood = async (req, res) => {
                     }
 
                     await Like.create(like).then((result) => {
-                        res.status(201).json({ msg: "Food Liked" })
+                        res.status(200).json({
+                            code: "200",
+                            status: "OK",
+                            message: "Food Liked"
+                        })
                     }).catch((error) => {
-                        res.status(500).json({ msg: "Something went wrong", error: error.message })
+                        res.status(500).json({
+                            code: "500",
+                            status: "SERVER_ERROR",
+                            message: "Something went wrong",
+                            errors: error.message
+                        })
                     })
                 }
             } else {
-                res.status(401).json({ msg: 'Unauthorized' });
+                res.status(401).json({
+                    code: "401",
+                    status: "UNAUTHORIZED",
+                    message: 'Unauthorized'
+                });
             }
         }
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -69,11 +95,19 @@ export const unlikeFood = async (req, res) => {
                 })
 
                 if (findUser == null) {
-                    return res.status(500).json({ msg: "User not found" })
+                    return res.status(404).json({
+                        code: "404",
+                        status: "NOT_FOUND",
+                        message: "User not found"
+                    })
                 }
 
                 if (findFood === null) {
-                    return res.status(401).json({ msg: 'Likes not found' });
+                    return res.status(404).json({
+                        code: "404",
+                        status: "NOT_FOUND",
+                        message: 'Food not found'
+                    });
                 } else {
                     await Like.destroy({
                         where: {
@@ -81,16 +115,34 @@ export const unlikeFood = async (req, res) => {
                             userId: decoded.userId,
                         }
                     }).then((result) => {
-                        res.status(201).json({ msg: "Food unliked" })
+                        res.status(200).json({
+                            code: "200",
+                            status: "OK",
+                            message: "Food unliked"
+                        })
                     }).catch((error) => {
-                        res.status(500).json({ msg: "Something went wrong" })
+                        res.status(500).json({
+                            code: "500",
+                            status: "SERVER_ERROR",
+                            message: "Something went wrong",
+                            errors: error.message
+                        })
                     })
                 }
             } else {
-                res.status(401).json({ msg: 'Unauthorized' });
+                res.status(401).json({
+                    code: "401",
+                    status: "UNAUTHORIZED",
+                    message: 'Unauthorized'
+                });
             }
         }
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }

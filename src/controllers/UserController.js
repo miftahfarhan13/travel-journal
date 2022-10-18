@@ -22,7 +22,7 @@ export const registerUser = async (req, res) => {
     const validate = v.validate(req.body, schema)
 
     if (validate.length) {
-        return res.status(400).json(validate)
+        return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
     }
 
     const findUser = await User.findOne({
@@ -44,8 +44,11 @@ export const registerUser = async (req, res) => {
                 }
 
                 User.create(user).then((result) => {
-                    res.status(201).json({
-                        msg: "User Created", data: {
+                    res.status(200).json({
+                        code: "200",
+                        status: "OK",
+                        message: "User Created",
+                        data: {
                             name: req.body.name,
                             email: req.body.email,
                             role: req.body.role,
@@ -54,12 +57,21 @@ export const registerUser = async (req, res) => {
                         }
                     })
                 }).catch((error) => {
-                    res.status(500).json({ msg: "Something went wrong" })
+                    res.status(500).json({
+                        code: "500",
+                        status: "SERVER_ERROR",
+                        message: "Something went wrong",
+                        errors: error.message
+                    })
                 })
             })
         })
     } else {
-        res.status(409).json({ msg: "Email already taken" })
+        res.status(409).json({
+            code: "409",
+            status: "CONFLICT",
+            message: "Email already taken"
+        })
     }
 }
 
@@ -72,7 +84,11 @@ export const loginUser = async (req, res) => {
         })
 
         if (findUser === null) {
-            res.status(400).json({ msg: "User not found" })
+            res.status(404).json({
+                code: "404",
+                status: "NOT_FOUND",
+                message: "User not found"
+            })
         } else {
             bcrypt.compare(req.body.password, findUser.password, (err, result) => {
                 if (result) {
@@ -82,7 +98,9 @@ export const loginUser = async (req, res) => {
                         role: findUser.role,
                     }, 'secret', (err, token) => {
                         res.status(200).json({
-                            msg: "Authentication successful",
+                            code: "200",
+                            status: "OK",
+                            message: "Authentication successful",
                             user: {
                                 id: findUser.id,
                                 name: findUser.name,
@@ -98,7 +116,12 @@ export const loginUser = async (req, res) => {
             })
         }
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -115,7 +138,9 @@ export const getUserLogin = async (req, res) => {
                     }
                 })
                 res.status(200).json({
-                    msg: "User found",
+                    code: "200",
+                    status: "OK",
+                    message: "User found",
                     user: {
                         id: findUser.id,
                         name: findUser.name,
@@ -126,11 +151,20 @@ export const getUserLogin = async (req, res) => {
                     },
                 });
             } else {
-                res.status(401).json({ msg: 'Unauthorized' });
+                res.status(401).json({
+                    code: "401",
+                    status: "UNAUTHORIZED",
+                    message: 'Unauthorized'
+                });
             }
         }
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -149,11 +183,18 @@ export const getAllUser = async (req, res) => {
         });
 
         res.status(200).json({
-            msg: "success",
+            code: "200",
+            status: "OK",
+            message: "Success",
             data: users,
         });
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -169,7 +210,7 @@ export const updateProfileUser = async (req, res) => {
         const validate = v.validate(req.body, schema)
 
         if (validate.length) {
-            return res.status(400).json(validate)
+            return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
         }
 
         if (req.headers && req.headers.authorization) {
@@ -183,7 +224,11 @@ export const updateProfileUser = async (req, res) => {
             })
 
             if (findUser == null) {
-                return res.status(500).json({ msg: "User not found" })
+                return res.status(404).json({
+                    code: "404",
+                    status: "NOT_FOUND",
+                    message: "User not found"
+                })
             }
 
             if (decoded) {
@@ -197,16 +242,33 @@ export const updateProfileUser = async (req, res) => {
                         id: decoded.userId
                     }
                 })
-                res.status(200).json({ msg: "User Updated" })
+                res.status(200).json({
+                    code: "200",
+                    status: "OK",
+                    message: "User Updated"
+                })
             } else {
-                res.status(401).json({ msg: 'Unauthorized' });
+                res.status(401).json({
+                    code: "401",
+                    status: "UNAUTHORIZED",
+                    message: 'Unauthorized'
+                });
 
             }
         } else {
-            res.status(401).json({ msg: 'Unauthorized' });
+            res.status(401).json({
+                code: "401",
+                status: "UNAUTHORIZED",
+                message: 'Unauthorized'
+            });
         }
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -219,7 +281,7 @@ export const updateProfileUserRole = async (req, res) => {
         const validate = v.validate(req.body, schema)
 
         if (validate.length) {
-            return res.status(400).json(validate)
+            return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
         }
 
         const findUser = await User.findOne({
@@ -229,7 +291,7 @@ export const updateProfileUserRole = async (req, res) => {
         })
 
         if (findUser == null) {
-            return res.status(500).json({ msg: "User not found" })
+            return res.status(404).json({ code: "404", status: "NOT_FOUND", message: "User not found" })
         }
 
         await User.update({
@@ -239,8 +301,17 @@ export const updateProfileUserRole = async (req, res) => {
                 id: req.params.userId
             }
         })
-        res.status(200).json({ msg: "User Role Updated" })
+        res.status(200).json({
+            code: "200",
+            status: "OK",
+            message: "User Role Updated"
+        })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }

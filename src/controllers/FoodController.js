@@ -107,11 +107,18 @@ export const getFoods = async (req, res) => {
         }
 
         res.status(200).json({
-            msg: 'success',
+            code: "200",
+            status: "OK",
+            message: 'Success',
             data: foodArray
         })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -157,18 +164,33 @@ export const getUserFoods = async (req, res) => {
                     }
                 })
             } else {
-                res.status(401).json({ msg: 'Unauthorized' });
+                res.status(401).json({
+                    code: "401",
+                    status: "UNAUTHORIZED",
+                    message: 'Unauthorized'
+                });
             }
         } else {
-            res.status(401).json({ msg: 'Unauthorized' });
+            res.status(401).json({
+                code: "401",
+                status: "UNAUTHORIZED",
+                message: 'Unauthorized'
+            });
         }
 
         res.status(200).json({
-            msg: 'success',
+            code: "200",
+            status: "OK",
+            message: 'Success',
             data: foodArray
         })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -181,7 +203,11 @@ export const getFoodById = async (req, res) => {
         })
 
         if (!response) {
-            return res.status(401).json({ msg: 'Food not found' });
+            return res.status(404).json({
+                code: "404",
+                status: "NOT_FOUND",
+                message: 'Food not found'
+            });
         }
 
         const responseLike = await Like.findAll({
@@ -234,12 +260,18 @@ export const getFoodById = async (req, res) => {
         }
 
         res.status(200).json({
-            msg: 'success',
+            code: "200",
+            status: "OK",
+            message: 'success',
             data: data
         })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
-
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
     }
 }
 
@@ -255,7 +287,7 @@ export const createFood = async (req, res) => {
         const validate = v.validate(req.body, schema)
 
         if (validate.length) {
-            return res.status(400).json(validate)
+            return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
         }
 
         await Food.create({
@@ -264,9 +296,14 @@ export const createFood = async (req, res) => {
             imageUrl: req.body.imageUrl,
             ingredients: req.body.ingredients.toString()
         })
-        res.status(201).json({ msg: "Food Created" })
+        res.status(200).json({ code: "200", status: "OK", message: "Food Created" })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
 
     }
 }
@@ -283,7 +320,7 @@ export const updateFood = async (req, res) => {
         const validate = v.validate(req.body, schema)
 
         if (validate.length) {
-            return res.status(400).json(validate)
+            return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
         }
 
         await Food.update({
@@ -296,9 +333,14 @@ export const updateFood = async (req, res) => {
                 id: req.params.id
             }
         })
-        res.status(200).json({ msg: "Food Updated" })
+        res.status(200).json({ code: "200", status: "OK", message: "Food Updated" })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
 
     }
 }
@@ -312,7 +354,7 @@ export const deleteFood = async (req, res) => {
         })
 
         if (findFood == null) {
-            return res.status(500).json({ msg: "Food not found" })
+            return res.status(404).json({ code: "404", status: "NOT_FOUND", message: "Food not found" })
         }
 
         await Food.destroy({
@@ -320,9 +362,14 @@ export const deleteFood = async (req, res) => {
                 id: req.params.id
             }
         })
-        res.status(200).json({ msg: "Food Deleted" })
+        res.status(200).json({ code: "200", status: "OK", message: "Food Deleted" })
     } catch (error) {
-        res.status(500).json({ msg: "Something went wrong", error: error.message })
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
 
     }
 }
