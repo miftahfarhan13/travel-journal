@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllUser, getUserLogin, loginUser, registerUser, updateProfileUser, updateProfileUserRole } from '../controllers/UserController.js'
+import { getAllUser, getUserLogin, loginUser, logoutUser, registerUser, updateProfileUser, updateProfileUserRole } from '../controllers/UserController.js'
 import { isAdmin } from '../middleware/isAdmin.js'
 import { isAuth } from '../middleware/isAuth.js'
 
@@ -11,5 +11,6 @@ router.post('/api/v1/update-user-role/:userId', isAdmin, updateProfileUserRole)
 router.post('/api/v1/login', isAuth, loginUser)
 router.get('/api/v1/user', isAuth, getUserLogin)
 router.get('/api/v1/all-user', isAdmin, getAllUser)
+router.get('/api/v1/logout', isAuth, logoutUser)
 
 export default router;

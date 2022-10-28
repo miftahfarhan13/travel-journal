@@ -75,6 +75,37 @@ export const registerUser = async (req, res) => {
     }
 }
 
+export const logoutUser = async (req, res) => {
+    try {
+        if (req.headers && req.headers.authorization) {
+            const authorization = req.headers.authorization.split(' ')[1]
+            const decoded = Jwt.verify(authorization, 'secret');
+            if (decoded) {
+                res.clearCookie("jwt")
+                res.status(200).json({
+                    code: "200",
+                    status: "OK",
+                    message: "Logout successful",
+                })
+            } else {
+                res.status(401).json({
+                    code: "401",
+                    status: "UNAUTHORIZED",
+                    message: 'Unauthorized'
+                });
+            }
+        }
+
+    } catch (error) {
+        res.status(500).json({
+            code: "500",
+            status: "SERVER_ERROR",
+            message: "Something went wrong",
+            errors: error.message
+        })
+    }
+}
+
 export const loginUser = async (req, res) => {
     try {
         const findUser = await User.findOne({
