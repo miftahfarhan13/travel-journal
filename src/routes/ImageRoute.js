@@ -1,6 +1,6 @@
 import express from 'express'
 import { uploadImage } from '../controllers/ImageController.js';
-import { isAdmin } from '../middleware/isAdmin.js'
+import { isAuth } from '../middleware/isAuth.js';
 
 const router = express.Router()
 
