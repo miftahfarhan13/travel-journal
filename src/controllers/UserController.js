@@ -143,6 +143,12 @@ export const loginUser = async (req, res) => {
                             token: token
                         })
                     })
+                } else {
+                    res.status(404).json({
+                        code: "404",
+                        status: "NOT_FOUND",
+                        message: "Wrong Password"
+                    })
                 }
             })
         }
