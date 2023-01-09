@@ -9,7 +9,7 @@ echo "### remove container"
 docker stop food_journal
 docker rm food_journal
 echo "### start container"
-docker container create --name food_journal --restart==always -p 4000:4000 -v ${SCRIPTPATH}/public/images:/app/public/images food-journal-backend:latest
+docker container create --name food_journal --restart=on-failure:10 -p 4000:4000 -v ${SCRIPTPATH}/public/images:/app/public/images food-journal-backend:latest
 docker cp .env food_journal:/app/.env
 docker start food_journal
 echo "### remove cache"
