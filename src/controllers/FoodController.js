@@ -106,14 +106,14 @@ export const getFoods = async (req, res) => {
             })
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             code: "200",
             status: "OK",
             message: 'Success',
             data: foodArray
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
             message: "Something went wrong",
@@ -164,28 +164,28 @@ export const getUserFoods = async (req, res) => {
                     }
                 })
             } else {
-                res.status(401).json({
+                return res.status(401).json({
                     code: "401",
                     status: "UNAUTHORIZED",
                     message: 'Unauthorized'
                 });
             }
         } else {
-            res.status(401).json({
+            return res.status(401).json({
                 code: "401",
                 status: "UNAUTHORIZED",
                 message: 'Unauthorized'
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             code: "200",
             status: "OK",
             message: 'Success',
             data: foodArray
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
             message: "Something went wrong",
@@ -259,14 +259,14 @@ export const getFoodById = async (req, res) => {
             }
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             code: "200",
             status: "OK",
             message: 'success',
             data: data
         })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
             message: "Something went wrong",
@@ -296,9 +296,9 @@ export const createFood = async (req, res) => {
             imageUrl: req.body.imageUrl,
             ingredients: req.body.ingredients.toString()
         })
-        res.status(200).json({ code: "200", status: "OK", message: "Food Created" })
+        return res.status(200).json({ code: "200", status: "OK", message: "Food Created" })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
             message: "Something went wrong",
@@ -333,9 +333,9 @@ export const updateFood = async (req, res) => {
                 id: req.params.id
             }
         })
-        res.status(200).json({ code: "200", status: "OK", message: "Food Updated" })
+        return res.status(200).json({ code: "200", status: "OK", message: "Food Updated" })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
             message: "Something went wrong",
@@ -362,9 +362,9 @@ export const deleteFood = async (req, res) => {
                 id: req.params.id
             }
         })
-        res.status(200).json({ code: "200", status: "OK", message: "Food Deleted" })
+        return res.status(200).json({ code: "200", status: "OK", message: "Food Deleted" })
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
             message: "Something went wrong",
