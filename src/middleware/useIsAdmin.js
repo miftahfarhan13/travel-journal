@@ -10,32 +10,34 @@ export const isAdmin = (req, res, next) => {
         return
     }
 
-    if (req.headers.authorization) {
-        const authorization = req.headers.authorization.split(' ')[1]
-        const decoded = Jwt.verify(authorization, 'secret');
-        if (!decoded) {
-            return res.status(401).json({
-                code: "401",
-                status: "UNAUTHORIZED",
-                message: 'Unauthorized please login first'
-            });
-        } else {
-            if (decoded.role !== 'admin') {
-                return res.status(401).json({
-                    code: "401",
-                    status: "BAD_REQUEST",
-                    message: 'User is not admin'
-                });
-            }
-        }
-    } else {
-        return res.status(401).json({
+    const authorization = req.headers.authorization
+    if (!authorization) {
+        res.status(401).json({
             code: "401",
             status: "UNAUTHORIZED",
             message: 'Unauthorized please login first'
         });
+        return
     }
 
+    const decoded = Jwt.verify(authorization.split(' ')[1], 'secret');
+    if (!decoded) {
+        res.status(401).json({
+            code: "401",
+            status: "UNAUTHORIZED",
+            message: 'Unauthorized please login first'
+        });
+        return
+    } else {
+        if (decoded.role !== 'admin') {
+            res.status(401).json({
+                code: "401",
+                status: "BAD_REQUEST",
+                message: 'User is not admin'
+            });
+            return
+        }
+    }
 
     next()
 }
