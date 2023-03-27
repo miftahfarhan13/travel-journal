@@ -1,41 +1,22 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
+import Activity from "./ActivityModel.js";
 
 const { DataTypes } = Sequelize
 
-const Promo = db.define('promos', {
+const Category = db.define('categories', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false
     },
-    title: {
+    name: {
         type: DataTypes.STRING,
-        allowNull: false,
-    },
-    description: {
-        type: DataTypes.TEXT,
         allowNull: false,
     },
     imageUrl: {
         type: DataTypes.STRING,
-        allowNull: false,
-    },
-    terms_condition: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
-    promo_code: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    promo_discount_price: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    minimum_claim_price: {
-        type: DataTypes.INTEGER,
         allowNull: false,
     },
     createdAt: {
@@ -50,4 +31,6 @@ const Promo = db.define('promos', {
     freezeTableName: true
 })
 
-export default Promo;
+Category.hasMany(Activity, { foreignKey: 'categoryId' })
+
+export default Category;

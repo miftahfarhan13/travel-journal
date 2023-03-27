@@ -66,6 +66,9 @@ export const createPromo = async (req, res) => {
             description: "string",
             terms_condition: "string",
             imageUrl: "string",
+            promo_code: "string",
+            promo_discount_price: "number",
+            minimum_claim_price: "number",
         }
 
         const validate = v.validate(req.body, schema)
@@ -79,6 +82,9 @@ export const createPromo = async (req, res) => {
             description: req.body.description,
             terms_condition: req.body.terms_condition,
             imageUrl: req.body.imageUrl,
+            promo_code: req.body.promo_code,
+            promo_discount_price: req.body.promo_discount_price,
+            minimum_claim_price: req.body.minimum_claim_price,
         })
         res.status(200).json({ code: "200", status: "OK", message: "Promo Created" })
     } catch (error) {
@@ -99,6 +105,9 @@ export const updatePromo = async (req, res) => {
             description: "string|optional|min:1",
             terms_condition: "string|optional|min:1",
             imageUrl: "string|optional|min:1",
+            promo_code: "string|optional|min:1",
+            promo_discount_price: "number|optional|min:1",
+            minimum_claim_price: "number|optional|min:1",
         }
 
         const validate = v.validate(req.body, schema)
@@ -107,11 +116,24 @@ export const updatePromo = async (req, res) => {
             return res.status(400).json({ code: "400", status: "BAD_REQUEST", errors: validate })
         }
 
+        const findPromo = await Promo.findOne({
+            where: {
+                id: req.params.id
+            }
+        })
+
+        if (findPromo == null) {
+            return res.status(404).json({ code: "404", status: "NOT_FOUND", message: "Promo not found" })
+        }
+
         await Promo.update({
             title: req.body.title,
             description: req.body.description,
             terms_condition: req.body.terms_condition,
             imageUrl: req.body.imageUrl,
+            promo_code: req.body.promo_code,
+            promo_discount_price: req.body.promo_discount_price,
+            minimum_claim_price: req.body.minimum_claim_price,
         }, {
             where: {
                 id: req.params.id

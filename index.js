@@ -4,6 +4,7 @@ import UserRoute from "./src/routes/UserRoute.js"
 import BannerRoute from "./src/routes/BannerRoute.js"
 import PromoRoute from "./src/routes/PromoRoute.js"
 import ImageRoute from "./src/routes/ImageRoute.js"
+import CategoryRoute from "./src/routes/CategoryRoute.js"
 import multer from "multer";
 import bodyParser from "body-parser";
 
@@ -39,6 +40,7 @@ app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 app.use(UserRoute)
 app.use(BannerRoute)
 app.use(PromoRoute)
+app.use(CategoryRoute)
 app.use(ImageRoute)
 
 app.listen(4000, () => console.log('Server up and running at http://localhost:4000'));

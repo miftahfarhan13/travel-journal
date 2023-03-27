@@ -1,6 +1,6 @@
 import db from "../config/Database.js";
-// import "./FoodModel.js";
-// import "./LikeModel.js";
+import "./ActivityModel.js";
+import "./CategoryModel.js";
 import "./UserModel.js";
 import "./BannerModel.js"
 import "./PromoModel.js"
