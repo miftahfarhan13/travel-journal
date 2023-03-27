@@ -31,6 +31,7 @@ const Category = db.define('categories', {
     freezeTableName: true
 })
 
-Category.hasMany(Activity, { foreignKey: 'categoryId' })
+Category.hasMany(Activity, { foreignKey: "categoryId" });
+Activity.belongsTo(Category, { foreignKey: "categoryId" });
 
 export default Category;

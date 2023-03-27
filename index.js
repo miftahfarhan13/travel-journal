@@ -5,6 +5,7 @@ import BannerRoute from "./src/routes/BannerRoute.js"
 import PromoRoute from "./src/routes/PromoRoute.js"
 import ImageRoute from "./src/routes/ImageRoute.js"
 import CategoryRoute from "./src/routes/CategoryRoute.js"
+import ActivityRoute from "./src/routes/ActivityRoute.js"
 import multer from "multer";
 import bodyParser from "body-parser";
 
@@ -42,5 +43,7 @@ app.use(BannerRoute)
 app.use(PromoRoute)
 app.use(CategoryRoute)
 app.use(ImageRoute)
+app.use(ActivityRoute)
+
 
 app.listen(4000, () => console.log('Server up and running at http://localhost:4000'));

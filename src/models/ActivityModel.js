@@ -36,7 +36,7 @@ const Activity = db.define('activities', {
     },
     price_discount: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
     },
     rating: {
         type: DataTypes.INTEGER,
