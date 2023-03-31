@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  travel-journal:
+    build: .
+    ports:
+      - "4010:4000"
