@@ -30,10 +30,10 @@ export const getPaymentMethods = async (req, res) => {
 export const generatePaymentMethods = async (req, res) => {
     try {
         const methods = [
-            { name: "BCA", virtualAccountNumber: "1234-5678-0001234567", virtualAccountName: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bca-logo.svg" },
-            { name: "Bank BRI", virtualAccountNumber: "9101-1121-0023456789", virtualAccountName: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bri-logo.svg" },
-            { name: "Bank Mandiri", virtualAccountNumber: "2718-1223-0045678901", virtualAccountName: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/mandiri-logo.svg" },
-            { name: "Bank BNI", virtualAccountNumber: "5678-1234-0012345678", virtualAccountName: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bni-logo.svg" },
+            { name: "BCA", virtual_account_number: "1234-5678-0001234567", virtual_account_name: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bca-logo.svg" },
+            { name: "Bank BRI", virtual_account_number: "9101-1121-0023456789", virtual_account_name: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bri-logo.svg" },
+            { name: "Bank Mandiri", virtual_account_number: "2718-1223-0045678901", virtual_account_name: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/mandiri-logo.svg" },
+            { name: "Bank BNI", virtual_account_number: "5678-1234-0012345678", virtual_account_name: "dibimbing", imageUrl: "https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/bni-logo.svg" },
         ]
 
         methods.map(async (method) => {
@@ -42,8 +42,8 @@ export const generatePaymentMethods = async (req, res) => {
             if (!paymentMethod) {
                 await PaymentMethod.create({
                     name: method.name,
-                    virtualAccountNumber: method.virtualAccountNumber,
-                    virtualAccountName: method.virtualAccountName,
+                    virtual_account_number: method.virtual_account_number,
+                    virtual_account_name: method.virtual_account_name,
                     imageUrl: method.imageUrl
                 })
             }
