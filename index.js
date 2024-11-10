@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import timeout from 'connect-timeout';
 import UserRoute from "./src/routes/UserRoute.js"
 import BannerRoute from "./src/routes/BannerRoute.js"
 import PromoRoute from "./src/routes/PromoRoute.js"
@@ -13,9 +14,17 @@ import bodyParser from "body-parser";
 import fileUpload from "express-fileupload";
 
 const app = express();
+
+app.use(timeout('5m'));
+app.use(haltOnTimedout);
+
 app.use(cors());
 app.use(express.static('public'));
 app.use(express.json());
+
+function haltOnTimedout(req, res, next) {
+    if (!req.timedout) next();
+  }
 
 app.use(bodyParser.json())
 
