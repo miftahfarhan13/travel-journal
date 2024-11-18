@@ -123,8 +123,6 @@ export const getTransactionById = async (req, res) => {
 }
 
 export const createTransaction = async (req, res) => {
-    const t = await sequelize.transaction();
-
     try {
         const { status, decoded } = await getSession(req)
 
@@ -173,7 +171,7 @@ export const createTransaction = async (req, res) => {
             totalAmount,
             orderDate,
             expiredDate
-        }, { transaction: t }).then(async (res) => {
+        }).then(async (res) => {
             const transactionId = res?.id;
 
             for await (const cart of carts) {
@@ -185,7 +183,7 @@ export const createTransaction = async (req, res) => {
                     price: cart?.activity?.price,
                     price_discount: cart?.activity?.price_discount,
                     quantity: cart?.quantity,
-                }, { transaction: t })
+                })
             }
         })
 
@@ -197,12 +195,8 @@ export const createTransaction = async (req, res) => {
             })
         })
         
-        await t.commit();
-
         return res.status(200).json({ code: "200", status: "OK", message: "Transaction Created", })
     } catch (error) {
-        await t.rollback();
-
         return res.status(500).json({
             code: "500",
             status: "SERVER_ERROR",
